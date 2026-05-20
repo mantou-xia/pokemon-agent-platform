@@ -1,0 +1,228 @@
+openapi: 3.0.0
+info:
+  title: Pokemon Tools API
+  description: 宝可梦数据查询工具，支持宝可梦信息查询、属性克制、弱点分析和进化链查询
+  version: 1.0.0
+  contact:
+    name: Pokemon Agent Platform
+
+servers:
+  - url: http://host.docker.internal:8100
+    description: Pokemon Tools 本地服务
+
+paths:
+  /tools/get_pokemon_info:
+    post:
+      summary: 获取宝可梦详细信息
+      description: 根据宝可梦中文或英文名查询详细信息，包括属性、种族值、描述等
+      operationId: getPokemonInfo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 宝可梦名称（中文或英文）
+                  example: "喷火龙"
+              required:
+                - name
+      responses:
+        '200':
+          description: 成功返回宝可梦信息
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  national_id:
+                    type: integer
+                    description: 全国图鉴编号
+                  name_zh:
+                    type: string
+                    description: 中文名
+                  name_en:
+                    type: string
+                    description: 英文名
+                  type1:
+                    type: string
+                    description: 主属性
+                  type2:
+                    type: string
+                    description: 副属性（无则为空）
+                  stats:
+                    type: object
+                    properties:
+                      hp:
+                        type: integer
+                      attack:
+                        type: integer
+                      defense:
+                        type: integer
+                      sp_attack:
+                        type: integer
+                      sp_defense:
+                        type: integer
+                      speed:
+                        type: integer
+                      total:
+                        type: integer
+                  description:
+                    type: string
+                    description: 宝可梦描述
+        '404':
+          description: 宝可梦未找到
+
+  /tools/get_type_effectiveness:
+    post:
+      summary: 查询属性克制关系
+      description: 查询指定属性对其他属性的克制效果（2倍伤害、0.5倍伤害等）
+      operationId: getTypeEffectiveness
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type_name:
+                  type: string
+                  description: 属性名称（中文）
+                  example: "火"
+              required:
+                - type_name
+      responses:
+        '200':
+          description: 成功返回属性克制信息
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  strong_against:
+                    type: array
+                    items:
+                      type: string
+                    description: 效果拔群的属性列表
+                  weak_against:
+                    type: array
+                    items:
+                      type: string
+                    description: 效果不好的属性列表
+                  no_effect_against:
+                    type: array
+                    items:
+                      type: string
+                    description: 无效的属性列表
+
+  /tools/get_pokemon_weakness:
+    post:
+      summary: 获取宝可梦弱点
+      description: 查询指定宝可梦的所有弱点（被什么属性克制）
+      operationId: getPokemonWeakness
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 宝可梦名称（中文或英文）
+                  example: "超梦"
+              required:
+                - name
+      responses:
+        '200':
+          description: 成功返回弱点列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pokemon:
+                    type: string
+                  weaknesses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        multiplier:
+                          type: number
+
+  /tools/get_evolution_chain:
+    post:
+      summary: 获取宝可梦进化链
+      description: 查询指定宝可梦的完整进化链
+      operationId: getEvolutionChain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 宝可梦名称（中文或英文）
+                  example: "伊布"
+              required:
+                - name
+      responses:
+        '200':
+          description: 成功返回进化链
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pokemon:
+                    type: string
+                  chain:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name_zh:
+                          type: string
+                        name_en:
+                          type: string
+                        trigger:
+                          type: string
+                        trigger_detail:
+                          type: string
+                        stage:
+                          type: integer
+
+  /tools:
+    get:
+      summary: 列出所有可用工具
+      description: 获取工具列表（用于元信息展示）
+      operationId: listTools
+      responses:
+        '200':
+          description: 成功返回工具列表
+
+  /health:
+    get:
+      summary: 健康检查
+      description: 检查服务是否正常运行
+      operationId: healthCheck
+      responses:
+        '200':
+          description: 服务正常
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"

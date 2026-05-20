@@ -1,0 +1,9 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2026-05-20T00:54:28.445Z
+provider: 
+---
+
+如果项目中存在/space/README.md，则每次执行任务的时候都要首先读取/space/README.md文件

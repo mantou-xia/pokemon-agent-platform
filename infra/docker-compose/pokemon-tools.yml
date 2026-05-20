@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  pokemon-tools:
+    build: ../../plugins/pokemon-tools
+    container_name: pokemon-tools
+    ports:
+      - "8100:8100"
+    environment:
+      - POKEMON_DB_URL=host=host.docker.internal port=5432 dbname=dify user=postgres password=difyai123456
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

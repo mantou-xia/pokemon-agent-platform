@@ -133,6 +133,25 @@ Promotion rules:
 - user-specific long-term preferences -> `space/users/mantou-xia/memory/`
 - project-wide architectural decisions -> `space/doc/decisions.md`
 
+## Execution Flow
+
+Between "plan written" and "plan archived", every task MUST follow this execution flow:
+
+```txt
+1. Write plan to current-plan.md (Status: Active)
+2. Decompose plan Steps into individual items in todo.md
+3. Pick first item → move it to doing.md
+4. Implement
+5. Test
+6. Item done → move it to done.md
+7. If remaining todo items → repeat from step 3
+8. All items done → set plan Status to Completed
+9. Snapshot current-plan.md into history/ as YYYY-MM-DD-topic.md
+10. Reset current-plan.md for next task
+```
+
+This ensures every step is traceable: todo shows what's planned, doing shows what's active, done shows what's finished.
+
 Research rules:
 
 - raw investigation notes and incomplete findings belong in `space/users/mantou-xia/research/`

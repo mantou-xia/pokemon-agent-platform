@@ -14,16 +14,14 @@ Agents MUST read this file first, then load additional context on demand.
 
 ## Startup Flow
 
-Every non-trivial task MUST follow this order:
+Every non-trivial task MUST follow this order (`space/doc/agent-rules.md` has the detailed version):
 
 1. Read `space/README.md`
 2. Decide what extra context is needed
 3. Read only the required context files
-4. Update `space/users/mantou-xia/plan/current-plan.md`
-5. Update todo state if needed
-6. Implement
-7. Test
-8. Record discoveries
+4. Write or update `space/users/mantou-xia/plan/current-plan.md`
+5. Follow the execution flow defined in `space/doc/agent-rules.md` (plan → todo → doing → done → archive)
+6. Record discoveries
 
 For any multi-file modification, the agent MUST update `space/users/mantou-xia/plan/current-plan.md` before editing implementation files.
 

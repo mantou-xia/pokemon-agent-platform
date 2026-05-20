@@ -1,3 +1,3 @@
 # Doing
 
-- No in-progress execution items recorded yet.
+_(当前无执行中的任务。)_
