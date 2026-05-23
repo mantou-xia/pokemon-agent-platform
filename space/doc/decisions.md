@@ -30,6 +30,12 @@ This file records stable project decisions that future agents should treat as de
 - User task state is tracked under `space/users/mantou-xia/todolist/`.
 - `todo/` is not a separate active convention for this repository.
 
+### 2026-05-20: `docs/` is the human-facing document layer
+
+- `docs/` stores phase reports, phase plans, and phase snapshots for human readers.
+- `space/` remains the runtime workspace and source of truth for agent execution state.
+- `docs/` should map to `space` artifacts instead of copying full runtime plan bodies.
+
 ## Update Rule
 
 Add a new entry here only when the decision is stable and should guide future work across tasks.

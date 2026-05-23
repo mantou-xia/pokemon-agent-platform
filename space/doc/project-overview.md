@@ -4,6 +4,8 @@
 
 `pokemon-agent-platform` 本质上不是普通的 AI Chat 产品，而是一个基于 Dify Runtime、使用 `/space` 作为 Agent Operating System、面向长期 AI 软件工程与 Pokemon Agent 场景的 AI-Native 开发平台。
 
+在这个模型之外，仓库还包含一个并行的 `docs/` 层，用于面向人类读者输出阶段汇报、阶段规划和阶段快照。
+
 ## 核心定位
 
 项目有两个同时存在的层级：
@@ -73,6 +75,7 @@ Dify 负责：
 ```txt
 Dify = Agent Runtime
 /space = Agent Operating System
+docs/ = Human Reporting Layer
 ```
 
 ## 项目目标
@@ -90,6 +93,7 @@ Dify = Agent Runtime
 ```txt
 pokemon-agent-platform/
 ├── dify/
+├── docs/
 ├── apps/
 ├── services/
 ├── plugins/
@@ -107,6 +111,7 @@ pokemon-agent-platform/
 - `packages/`: Monorepo 公共模块
 - `infra/`: 部署与基础设施
 - `space/`: AI Agent 长期开发工作区
+- `docs/`: 面向人的阶段文档层
 
 ## `/space` 的意义
 
@@ -177,6 +182,8 @@ space/
 ```
 
 通过 `memory`、`plan`、`research`、`todo`、`architecture`、`decisions` 这些结构，项目试图让 Agent 具备接近长期工程协作者的工作能力。
+
+与之配套，`docs/` 负责把这些运行时沉淀转化为人类更容易阅读的阶段汇报与阶段规划，但不替代 `space/` 的执行地位。
 
 ## 当前共识
 

@@ -10,6 +10,7 @@ Agents MUST read this file first, then load additional context on demand.
 
 - `No Plan, No Code.`
 - `space/` is the Agent Workspace, not a generic docs folder.
+- `docs/` is the human-facing reporting layer, not the agent runtime source of truth.
 - `README.md` routes context. Detailed rules belong in `space/doc/` and user workspace files.
 
 ## Startup Flow

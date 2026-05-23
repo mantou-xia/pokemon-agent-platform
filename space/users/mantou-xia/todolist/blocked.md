@@ -1,3 +1,1 @@
-# Blocked
-
-- No blocked items recorded yet.
+当前无阻塞项。

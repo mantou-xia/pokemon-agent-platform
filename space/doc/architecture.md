@@ -14,6 +14,7 @@
 ```txt
 pokemon-agent-platform/
 ├── dify/
+├── docs/
 ├── apps/
 ├── services/
 ├── plugins/
@@ -33,6 +34,9 @@ Business Control Layer
 
 Agent Runtime and Memory Layer
   └─ dify/ + space/
+
+Human Reporting Layer
+  └─ docs/
 ```
 
 ## 核心分层说明
@@ -238,6 +242,24 @@ Tool 负责计算
 Dify = Agent Runtime
 /space = Agent Operating System
 ```
+
+### 8. `docs/`: Human Reporting Layer
+
+`docs/` 是面向人类读者的阶段性文档层，用于沉淀：
+
+- 阶段汇报
+- 阶段目标
+- 阶段快照
+- `space` 计划与结果的阅读入口
+
+它的职责不是取代 `space/`，而是把 `space/` 中对 Agent 友好的运行时事实，整理为对人类更容易扫描和回顾的项目文档。
+
+边界原则：
+
+- `space/` = agent-facing runtime workspace
+- `docs/` = human-facing project reporting layer
+- 运行时事实仍以 `space/` 与实现目录为准
+- `docs/` 做摘要、规划和映射，不做运行时真相源
 
 ## 关键系统关系
 
