@@ -1,8 +1,21 @@
 /**
  * Dify Chat API 客户端
- *
- * 封装与 Dify 聊天 API 的通信，支持流式 SSE 响应。
  */
+
+export interface DifyAppParams {
+  opening_statement: string;
+  suggested_questions: string[];
+  user_input_form: UserInputField[];
+}
+
+export interface UserInputField {
+  type: "text-input" | "select" | "paragraph" | "number";
+  label: string;
+  variable: string;
+  required: boolean;
+  default?: string;
+  options?: { label: string; value: string }[];
+}
 
 export interface DifyMessage {
   role: "user" | "assistant" | "tool";
@@ -37,19 +50,33 @@ export class DifyClient {
     return this.conversationId;
   }
 
-  setConversationId(id: string | null) {
-    this.conversationId = id;
-  }
-
   cancel() {
     this.abortController?.abort();
   }
 
-  async *chat(query: string, user: string = "web-user"): AsyncGenerator<DifyStreamEvent> {
+  /** 获取应用参数（开场白、建议问题、变量配置） */
+  async getAppParams(): Promise<DifyAppParams> {
+    const resp = await fetch(`${API_BASE}/parameters`, {
+      headers: { Authorization: `Bearer ${API_KEY}` },
+    });
+    if (!resp.ok) throw new Error(`Failed to get params: ${resp.status}`);
+    const data = await resp.json();
+    return {
+      opening_statement: data.opening_statement || "",
+      suggested_questions: data.suggested_questions || [],
+      user_input_form: parseUserInputForm(data.user_input_form || []),
+    };
+  }
+
+  async *chat(
+    query: string,
+    inputs: Record<string, string> = {},
+    user: string = "web-user"
+  ): AsyncGenerator<DifyStreamEvent> {
     this.abortController = new AbortController();
 
     const body = JSON.stringify({
-      inputs: { user_name: user, assistant_name: "宝可梦助手" },
+      inputs: { user_name: user, assistant_name: "宝可梦助手", ...inputs },
       query,
       response_mode: "streaming",
       user,
@@ -88,7 +115,6 @@ export class DifyClient {
       for (const line of lines) {
         const trimmed = line.trim();
         if (!trimmed || !trimmed.startsWith("data: ")) continue;
-
         try {
           const event: DifyStreamEvent = JSON.parse(trimmed.slice(6));
           if (event.conversation_id) {
@@ -101,4 +127,20 @@ export class DifyClient {
       }
     }
   }
+}
+
+function parseUserInputForm(
+  raw: Record<string, Record<string, unknown>>[]
+): UserInputField[] {
+  return raw.map((item) => {
+    const [type, config] = Object.entries(item)[0];
+    return {
+      type: type as UserInputField["type"],
+      label: (config.label as string) || "",
+      variable: (config.variable as string) || "",
+      required: (config.required as boolean) || false,
+      default: (config.default as string) || "",
+      options: (config.options as { label: string; value: string }[]) || undefined,
+    };
+  });
 }
